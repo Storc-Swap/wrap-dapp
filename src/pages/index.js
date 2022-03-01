@@ -7,6 +7,7 @@ import {
   List,
   ListIcon,
   ListItem,
+  Spacer
 } from '@chakra-ui/react'
 import { CheckCircleIcon, LinkIcon } from '@chakra-ui/icons'
 import { Hero } from '../components/Hero'
@@ -17,20 +18,26 @@ import { CTA } from '../components/CTA'
 import { UnwrapWidget } from '../components/UnwrapWidget'
 import { Footer } from '../components/Footer'
 
+import storc from '../public/purpstorc.png'  
+import Image from 'next/image'
+
 const Index = () => (
   <Container height="100vh">
     <Hero />
+    
     <Main>
-
-      <Box>
+       
+      
+          
+          <Image  src={storc} alt='Storc Card' />
           <UnwrapWidget/>
-      </Box>
+     
 
     </Main>
 
     <DarkModeSwitch />
     <Footer>
-      <Text>Guide Coming Soon</Text>
+      <Text>(Guide Coming Soon)</Text>
     </Footer>
     <CTA />
 
