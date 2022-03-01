@@ -15,19 +15,19 @@ import { Container } from '../components/Container'
 import { Main } from '../components/Main'
 import { DarkModeSwitch } from '../components/DarkModeSwitch'
 import { CTA } from '../components/CTA'
-import { UnwrapWidget } from '../components/UnwrapWidget'
+import { WrapWidget } from '../components/WrapWidget'
 import { Footer } from '../components/Footer'
 
 import storc from '../public/purpstorc.png'  
 import Image from 'next/image'
 
-const Index = () => (
+const Wrap = () => (
   <Container height="100vh">
-    <Hero />
+    <Hero title='wrap-dapp'/>
     
     <Main>
           <Image  src={storc} alt='Storc Card' />
-          <UnwrapWidget/>
+          <WrapWidget/>
     </Main>
 
     <DarkModeSwitch />
@@ -40,4 +40,4 @@ const Index = () => (
   </Container>
 )
 
-export default Index
+export default Wrap

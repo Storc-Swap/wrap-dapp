@@ -2,11 +2,18 @@ import {useState} from "react";
 import Barcode from 'react-barcode';
 import {Fragment} from "react";
 import {  Center,
+  Code,
   Input,
   FormControl,
   FormLabel,
   FormErrorMessage,
   FormHelperText,Button } from '@chakra-ui/react'
+
+  import {
+    encrypt,
+  } from 'eth-sig-util';
+
+  import {ethers} from 'ethers'
 
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; // Import the FontAwesomeIcon component
 // import { faMagic } from "@fortawesome/free-solid-svg-icons"; // import the icons you need
@@ -14,8 +21,8 @@ import {  Center,
 //     truncStringPortion
 // } from "@utils/nftCard";
 
-export const UnwrapWidget = () => {
-    const [encryptedCode, setEncryptedCode] = useState('sample code');
+export const WrapWidget = () => {
+    const [encryptedCode, setEncryptedCode] = useState('wrapped code here');
     const [redeemCode, setRedeemCode] = useState('code here');
     //
     const onConnectAccount = async () => {
@@ -28,7 +35,6 @@ export const UnwrapWidget = () => {
         const decryptedRawMessage = await window.ethereum.request({
           method: 'eth_decrypt',
           params: [code, window.ethereum.selectedAddress],
-          //params: [ this.state.currentNFT.encryptedCode, window.ethereum.selectedAddress],
         })
 
         setRedeemCode(decryptedRawMessage);
@@ -44,27 +50,47 @@ export const UnwrapWidget = () => {
       }
     }
 
+    function stringifiableToHex(value) {
+      return ethers.utils.hexlify(Buffer.from(JSON.stringify(value)));
+    }
 
-    const connectAndDecrypt = async event => {
+    const encryptWrap = async event => {
       event.preventDefault()
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      const account = accounts[0];
-      console.log("current account is "+ account);
-      console.log(event.target.encryptedCode.value);
-      const result = await onDecrypt(event.target.encryptedCode.value);
+
+
+
+      try {
+        const wrappedCode = stringifiableToHex(
+          encrypt(
+             event.target.encryptedCode.value,
+            { data: event.target.plainCode.value },
+            'x25519-xsalsa20-poly1305',
+          ),
+        );
+        console.log(wrappedCode);
+        setEncryptedCode(wrappedCode);
+      } catch (error) {
+        console.log(error)
+      }
+    
+      console.log(event.target.plainCode.value);
+    
     }
 
     return (
       <Fragment>
-        <form onSubmit={connectAndDecrypt}>
+        <form onSubmit={encryptWrap}>
           <FormControl >
-            <FormLabel htmlFor='encryptedCode'>Wrapped Code</FormLabel>
-            <Input id='encryptedCode' placeholder='Some Encrypted Text' />
-            <FormHelperText>Only the correct wallet can unwrap redemption code.</FormHelperText>
+            <FormLabel htmlFor='plainCode'>Code to Wrap</FormLabel>
+            <Input id='plainCode' placeholder='Plain Text Code' />
+
+            <FormLabel htmlFor='encryptedCode'>Recipient or Delegate Encryption Key</FormLabel>
+            <Input id='encryptedCode' placeholder='Ex: qIK903AwuYsIIrPUth2zJq9406Aa+VEJx3MQd7jCDTk='  />
+            <FormHelperText>This is different than the wallet address</FormHelperText>
+            <Button width="100%" type='submit' bgGradient="linear(to-tr, purple.300,blue.400)">Wrap Code</Button>
             <Center>
-              <Barcode width={2} height={50} lineColor="#e14eca"  background="transparent" marginTop={10} marginLeft={5} marginRight={5} value={redeemCode ?? 'code here'} required/>  
+            <Code fontSize='4xl' isTruncated>{encryptedCode}</Code>
             </Center>
-            <Button width="100%" type='submit' bgGradient="linear(to-tr, teal.300,yellow.400)">Unwrap Code</Button>
           </FormControl>
         </form>
       </Fragment>

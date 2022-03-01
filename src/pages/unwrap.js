@@ -21,9 +21,9 @@ import { Footer } from '../components/Footer'
 import storc from '../public/purpstorc.png'  
 import Image from 'next/image'
 
-const Index = () => (
+const Unwrap = () => (
   <Container height="100vh">
-    <Hero />
+    <Hero title='unwrap-dapp'/>
     
     <Main>
           <Image  src={storc} alt='Storc Card' />
@@ -40,4 +40,4 @@ const Index = () => (
   </Container>
 )
 
-export default Index
+export default Unwrap
