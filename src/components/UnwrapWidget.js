@@ -14,8 +14,8 @@ import {  Center,
 //     truncStringPortion
 // } from "@utils/nftCard";
 
-export const UnwrapWidget = () => {
-    const [encryptedCode, setEncryptedCode] = useState('sample code');
+export const UnwrapWidget = ({data}) => {
+    const [encryptedCode, setEncryptedCode] = useState('Encrypted Code');
     const [redeemCode, setRedeemCode] = useState('code here');
     //
     const onConnectAccount = async () => {
@@ -59,7 +59,7 @@ export const UnwrapWidget = () => {
         <form onSubmit={connectAndDecrypt}>
           <FormControl >
             <FormLabel htmlFor='encryptedCode'>Wrapped Code</FormLabel>
-            <Input id='encryptedCode' placeholder='Some Encrypted Text' />
+            <Input id='encryptedCode' placeholder={data.metadata.encryptedCode ?? data.title} />
             <FormHelperText>Only the correct wallet can unwrap redemption code.</FormHelperText>
             <Center>
               <Barcode width={2} height={50} lineColor="#e14eca"  background="transparent" marginTop={10} marginLeft={5} marginRight={5} value={redeemCode ?? 'code here'} required/>  
